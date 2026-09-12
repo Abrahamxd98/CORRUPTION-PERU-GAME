@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="CORRUPTION PERÚ - juego de estrategia empresarial ficticio de Abraham Labs.">
+<title>CORRUPTION PERÚ · Abraham Labs</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#071019;color:#fff;font-family:Inter,system-ui,Arial,sans-serif}body{overflow:hidden}.top{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #243241;background:#0d1721}.brand{font-weight:900;font-size:22px;letter-spacing:-.5px}.brand span{color:#ef4444}.profile{display:flex;align-items:center;gap:10px}.avatar{width:36px;height:36px;border-radius:50%;background:#2563eb;display:grid;place-items:center;font-weight:900}.meta{line-height:1.15}.meta strong{display:block;font-size:13px}.meta small{color:#94a3b8}.game{width:100%;height:calc(100% - 62px);border:0;background:#0b1118}.login{position:fixed;inset:0;z-index:10;background:radial-gradient(circle at 50% 20%,#172536 0,#071019 55%);display:grid;place-items:center;padding:20px}.login.hidden{display:none}.card{width:min(540px,100%);padding:30px;border:1px solid #334155;border-radius:22px;background:#101923;box-shadow:0 35px 100px #0008}.eyebrow{font-size:12px;letter-spacing:.14em;color:#94a3b8;font-weight:800}.card h1{font-size:42px;margin:7px 0 5px}.card h1 span{color:#ef4444}.card p{color:#aeb9c7;line-height:1.55;margin:0 0 22px}.card label{display:block;margin:14px 0 6px;color:#aeb9c7;font-size:12px;font-weight:700}.card input{width:100%;border:1px solid #334155;border-radius:10px;background:#08111a;color:#fff;padding:13px 14px;font-size:15px}.card button{width:100%;margin-top:20px;padding:14px;border:0;border-radius:10px;background:#ef4444;color:#fff;font-weight:900;font-size:14px;cursor:pointer}.note{text-align:center;color:#64748b;font-size:11px;margin-top:14px}.fallback{display:none;position:absolute;inset:62px 0 0;background:#071019;padding:30px;text-align:center}.fallback a{color:#60a5fa}
+</style>
+</head>
+<body>
+<div id="login" class="login">
+  <div class="card">
+    <div class="eyebrow">ABRAHAM LABS · JUEGO DE ESTRATEGIA</div>
+    <h1>CORRUPTION <span>PERÚ</span></h1>
+    <p>Construye una contratista, compite por licitaciones, administra liquidez, banca, fianzas, consorcios y expansión internacional.</p>
+    <label>ALIAS DEL JUGADOR</label>
+    <input id="alias" maxlength="24" placeholder="Ej. Abraham">
+    <label>NOMBRE DE LA EMPRESA</label>
+    <input id="company" maxlength="40" placeholder="Ej. Arabella Infrastructure">
+    <button id="start">INICIAR PARTIDA</button>
+    <div class="note">Perfil guardado localmente en este navegador.</div>
+  </div>
+</div>
+<header class="top">
+  <div class="brand">CORRUPTION <span>PERÚ</span></div>
+  <div class="profile"><div id="avatar" class="avatar">CP</div><div class="meta"><strong id="playerName">Jugador</strong><small id="companyName">Empresa</small></div></div>
+</header>
+<iframe id="game" class="game" title="CORRUPTION PERÚ" src="https://corruption-beta.abrahamnegocios.pe/"></iframe>
+<div id="fallback" class="fallback"><h2>No se pudo cargar el motor</h2><p>El juego estable continúa disponible en el servidor de juego.</p><p><a href="https://corruption-beta.abrahamnegocios.pe/" target="_blank" rel="noopener">Abrir CORRUPTION PERÚ</a></p></div>
+<script>
+const KEY='cp_player_profile_v1';
+const login=document.getElementById('login'),alias=document.getElementById('alias'),company=document.getElementById('company');
+function initials(v){return (v||'CP').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'CP'}
+function paint(p){document.getElementById('playerName').textContent=p.alias;document.getElementById('companyName').textContent=p.company;document.getElementById('avatar').textContent=initials(p.alias)}
+function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+const saved=read();if(saved&&saved.alias&&saved.company){paint(saved);login.classList.add('hidden')}else{login.classList.remove('hidden')}
+document.getElementById('start').onclick=()=>{const p={alias:alias.value.trim()||'Jugador',company:company.value.trim()||'Contratista Perú'};localStorage.setItem(KEY,JSON.stringify(p));paint(p);login.classList.add('hidden')};
+const frame=document.getElementById('game');let loaded=false;frame.addEventListener('load',()=>{loaded=true});setTimeout(()=>{if(!loaded)document.getElementById('fallback').style.display='block'},9000);
+</script>
+</body>
+</html>
